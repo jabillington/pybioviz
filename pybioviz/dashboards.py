@@ -130,7 +130,7 @@ def genome_features_viewer(gff_file, ref_file=None, plot_width=900):
     
     feature_pane = pn.pane.Bokeh(height=100,margin=10)
     seq_pane = pn.pane.Bokeh(height=50,margin=10)
-    debug_pane = pn.pane.Str('debug',width=200,style={'background':'yellow','margin': '4pt'})
+    # debug_pane = pn.pane.Str('debug',width=200,style={'background':'yellow','margin': '4pt'})
     
     if ref_file is not None:
         seqlen = utils.get_fasta_length(ref_file)
