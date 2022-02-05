@@ -130,7 +130,6 @@ def genome_features_viewer(gff_file, ref_file=None, plot_width=900):
     
     feature_pane = pn.pane.Bokeh(height=100,margin=10)
     seq_pane = pn.pane.Bokeh(height=50,margin=10)
-    # debug_pane = pn.pane.Str('debug',width=200,style={'background':'yellow','margin': '4pt'})
     
     if ref_file is not None:
         seqlen = utils.get_fasta_length(ref_file)
@@ -176,8 +175,7 @@ def genome_features_viewer(gff_file, ref_file=None, plot_width=900):
             start = int(vals[0])
             end = int(vals[1])
             slider.value = start        
-            
-        #debug_pane.object=type(start)
+        
         p = feature_pane.object
         p.x_range.start = start
         p.x_range.end = end
@@ -193,7 +191,6 @@ def genome_features_viewer(gff_file, ref_file=None, plot_width=900):
     loc_pane.param.watch(update,'value',onlychanged=True)    
     left_button.param.watch(pan,'clicks')
     right_button.param.watch(pan,'clicks')
-    #debug_pane.object = utils.get_fasta_names(ref_file)[0] 
     if ref_file != None:
         chrom_select.options = utils.get_fasta_names(ref_file)
     #plot
@@ -202,7 +199,7 @@ def genome_features_viewer(gff_file, ref_file=None, plot_width=900):
     #side = pn.Column(file_input,css_classes=['form'],width=200,margin=20)
     top = pn.Row(loc_pane,xzoom_slider,search_pane,chrom_select,left_button,right_button)
     main = pn.Column(feature_pane, seq_pane, sizing_mode='stretch_width')
-    app = pn.Column(top,slider,main,debug_pane, sizing_mode='stretch_width',width_policy='max',margin=20)
+    app = pn.Column(top,slider,main, sizing_mode='stretch_width',width_policy='max',margin=20)
     return app
 
 def bam_viewer(bam_file, ref_file, gff_file=None, width=1000, height=200, color='gray'):
@@ -227,7 +224,6 @@ def bam_viewer(bam_file, ref_file, gff_file=None, width=1000, height=200, color=
     colorby = pnw.Select(name='Color by', options=['quality','pair orientation','read strand'], width=180)
     search_pane = pnw.TextInput(name='search',width=200)
     trans_option = pnw.Checkbox(name='show translation')
-    debug_pane = pn.pane.Markdown()
     
     def pan_right(event):
         plot = main_pane.object
@@ -268,7 +264,6 @@ def bam_viewer(bam_file, ref_file, gff_file=None, width=1000, height=200, color=
         df = utils.features_to_dataframe(feats)    
         df['gene'] = df.gene.fillna('')
         f = df[df.gene.str.contains(term)].iloc[0]
-        debug_pane.object = str(f.start)
         slider.value = int(f.start)
         update(event)
         return
@@ -322,5 +317,5 @@ def bam_viewer(bam_file, ref_file, gff_file=None, width=1000, height=200, color=
     #menus = pn.Row(bam_input, ref_input, gff_input)
     top = pn.Row(slider,xzoom_slider,yzoom_slider,panleft_btn,panright_btn,loc_pane)
     bottom = pn.Row(chroms_select, search_pane,colorby,trans_option)
-    app = pn.Column(top,cov_pane,main_pane,ref_pane,feat_pane,bottom,debug_pane)
+    app = pn.Column(top,cov_pane,main_pane,ref_pane,feat_pane,bottom)
     return app
